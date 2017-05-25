@@ -16,9 +16,9 @@ var ConversationV1 = require('watson-developer-cloud/conversation/v1');
 
 // Set up Conversation service wrapper.
 var conversation = new ConversationV1({
-  username: '16335e95-920d-432d-bfb9-159dc0c1295d', // replace with username from service key
-  password: 'ZhPYWRLWTz5W', // replace with password from service key
-  path: { workspace_id: 'e030b062-33f1-4073-85b1-af3ef24f9597' }, // replace with workspace ID
+  username: 'xxxxxxx', // replace with username from service key
+  password: 'xxxxxxx', // replace with password from service key
+  path: { workspace_id: 'xxxxxx' }, // replace with workspace ID
   version_date: '2016-07-11'
 });
 
@@ -60,13 +60,41 @@ function processResponse(err, response) {
  }
 
 echoAgent.on('MyCoolAgent.ContentEvnet',(contentEvent)=>{
-    if (contentEvent.message.startsWith('#close')) {
-        echoAgent.updateConversationField({
-            conversationId: contentEvent.dialogId,
-            conversationField: [{
-                    field: "ConversationStateField",
-                    conversationState: "CLOSE"
-                }]
+    if (contentEvent.message.includes('Bye') || contentEvent.message.includes('Goodbye') ) {
+
+        console.log('Sending goodbye to watson')
+        //close the watson conversation.
+        conversation.message({
+            input: { text: 'Goodbye' },
+            context: context,
+        }, function (err, response) {
+                 if (err) {
+                   console.error(err); // something went wrong
+                   return;
+                 }
+                 if (response.output.action === 'end_conversation') {
+                     // User said goodbye, so we're done.
+                     console.log('Conversation Ended: ' + JSON.stringify(response.output));
+                     context = {};
+
+                     echoAgent.publishEvent({
+                                 dialogId: contentEvent.dialogId,
+                                 event: {
+                                     type: 'ContentEvent',
+                                     contentType: 'text/plain',
+                                     message: response.output.text[0]
+                                 }
+                             });
+
+                     echoAgent.updateConversationField({
+                        conversationId: contentEvent.dialogId,
+                        conversationField: [{
+                                field: "ConversationStateField",
+                                conversationState: "CLOSE"
+                            }]
+                    });
+                   }
+
         });
     } else {
         conversation.message({

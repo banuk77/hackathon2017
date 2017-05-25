@@ -61,16 +61,16 @@ class MyCoolAgent extends Agent {
 
                     // demonstraiton of using the consumer profile calls
                     const consumerId = change.result.conversationDetails.participants.filter(p => p.role === "CONSUMER")[0].id;
-                    this.getUserProfile(consumerId, (e, profileResp) => {
-                        this.publishEvent({
-                            dialogId: change.result.convId,
-                            event: {
-                                type: 'ContentEvent',
-                                contentType: 'text/plain',
-                                message: 'Hi I\'m BOS Bot. Your 24 hour personal assistant.'
-                            }
-                        });
-                    });
+//                    this.getUserProfile(consumerId, (e, profileResp) => {
+//                        this.publishEvent({
+//                            dialogId: change.result.convId,
+//                            event: {
+//                                type: 'ContentEvent',
+//                                contentType: 'text/plain',
+//                                message: 'Hi I\'m BOS Bot. Your 24 hour personal assistant.'
+//                            }
+//                        });
+//                    });
                     this.subscribeMessagingEvents({dialogId: change.result.convId});
                 } else if (change.type === 'DELETE') {
                     // conversation was closed or transferred
