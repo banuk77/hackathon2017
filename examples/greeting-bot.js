@@ -23,7 +23,7 @@ agent.on('cqm.ExConversationChangeNotification', notificationBody => {
     notificationBody.changes.forEach(change => {
         if (change.type === 'UPSERT') {
             if (!openConvs[change.result.convId]) {
-                openConvs[change.result.convId] = change.result;                
+                openConvs[change.result.convId] = change.result;
                 if (!getParticipantInfo(change.result.conversationDetails,agent.agentId)) {
                     agent.updateConversationField({
                         'conversationId': change.result.convId,
@@ -38,7 +38,7 @@ agent.on('cqm.ExConversationChangeNotification', notificationBody => {
                             event: {
                                 type: 'ContentEvent',
                                 contentType: 'text/plain',
-                                message: 'welcome from bot'
+                                message: 'welcome from bot-- How can I help::(((('
                             }
                         });
                     });
@@ -62,5 +62,5 @@ agent.on('closed', data => {
 });
 
 function getParticipantInfo(convDetails,participantId) {
-    convDetails.participants.filter(p=>p.id === participantId)[0];    
+    convDetails.participants.filter(p=>p.id === participantId)[0];
 }
